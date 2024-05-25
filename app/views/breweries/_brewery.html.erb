@@ -1,0 +1,26 @@
+<div id="<%= dom_id brewery %>">
+  <h2>
+    <%= brewery.name %>
+    <% if not brewery.active  %>
+      <span class="badge bg-secondary">retired</span>
+    <% end %>
+  </h2>
+
+  <p>Established in: <%= brewery.year %></p>
+
+  <p>Beers count: <%= brewery.beers.count %></p>
+
+  <p>
+    <% brewery.beers.each do |beer| %>
+      <%= link_to beer.name, beer %>
+    <% end %>
+  </p>
+  
+  <p class="badge bg-secondary">
+    <% if brewery.ratings.empty? %>
+      Brewery has not yet been rated!
+    <% else %>
+      Brewery has <%= pluralize(brewery.ratings.size, 'rating') %> with an average of <%= round(brewery.average_rating) %>
+    <% end %>
+  </p>
+</div>

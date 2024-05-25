@@ -1,0 +1,2 @@
+module BeerclubsHelper
+end

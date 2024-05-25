@@ -1,0 +1,32 @@
+<%= form_with(model: beerclub) do |form| %>
+  <% if beerclub.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(beerclub.errors.count, "error") %> prohibited this beerclub from being saved:</h2>
+
+      <ul>
+        <% beerclub.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div>
+    <%= form.label :founded, class: "form-label" %>
+    <%= form.number_field :founded, class: "form-control" %>
+  </div>
+
+  <div>
+    <%= form.label :city, class: "form-label" %>
+    <%= form.text_field :city, class: "form-control" %>
+  </div>
+
+  <div>
+    <%= form.submit class: 'btn btn-primary' %>
+  </div>
+<% end %>

@@ -1,0 +1,12 @@
+<%= render @style %>
+
+<% if @style.beers %>
+  <p>beers:<p>
+  <ul>
+    <% @style.beers.each do |beer| %>
+      <li><%= link_to beer.name, beer %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= edit_and_destroy_buttons(@style) %>

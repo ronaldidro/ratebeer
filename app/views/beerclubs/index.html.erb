@@ -1,0 +1,9 @@
+<h1>Beerclubs</h1>
+
+<div id="beerclubs">
+  <% @beerclubs.each do |beerclub| %>
+    <p><%= link_to beerclub.name, beerclub %></p>
+  <% end %>
+</div>
+
+<%= link_to('New beerclub', new_beerclub_path, class: 'btn btn-primary') if current_user %>

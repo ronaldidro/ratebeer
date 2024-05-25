@@ -1,0 +1,45 @@
+<h1>Beer places search</h1>
+
+<%= form_with url: places_path, method: :post do |form| %>
+  <%= form.label :city, class: "form-label" %>
+  <%= form.text_field :city, class: "form-control" %>
+  <%= form.submit "Search", class: 'btn btn-primary' %>
+<% end %>
+
+<% if @weather %>
+  <div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-4 d-flex align-items-center justify-content-center">
+        <img src=<%= @weather.weather_icons.first %> class="img-fluid" alt="weather-icon">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">The current beer weather in <%= @city %></h5>
+          <p class="card-text"><%= @weather.temperature %> Celsius</p>
+          <p class="card-text"><small class="text-muted"><strong>wind</strong> <%= @weather.wind_speed %>, direction: <%= @weather.wind_dir %></small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if @places %>
+  <table class="table table-striped">
+    <thead>
+      <% Place.rendered_fields.each do |field| %>
+        <th><%= field %></th>
+      <% end %>
+    </thead>
+    <% @places.each do |place| %>
+      <tr>
+        <% Place.rendered_fields.each do |field| %>
+          <% if field == :name %>
+            <td><%= link_to place.name, place_path(place.id) %></td>
+          <% else %>
+            <td> <%= place.send(field) %></td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+<% end %>

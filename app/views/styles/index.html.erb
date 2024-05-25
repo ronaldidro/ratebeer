@@ -1,0 +1,11 @@
+<h1>Styles</h1>
+
+<div id="styles">
+  <div class="list-group">
+    <% @styles.each do |style| %>
+      <%= link_to style.name, style, class: 'list-group-item list-group-item-action' %>
+    <% end %>
+  </div>
+</div>
+
+<%= link_to "New style", new_style_path, class: 'btn btn-primary' %>

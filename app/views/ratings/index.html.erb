@@ -1,0 +1,70 @@
+<h2>Ratings</h2>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+      <h4>Best beers</h4>
+      <table class="table">
+        <thead>
+          <th>Beer</th>
+          <th>Average</th>
+        </thead>
+        <tbody>
+          <% @beers.each do |beer| %>
+            <tr>
+              <td><%= link_to beer.name, beer %></td>
+              <td><%= round(beer.average_rating) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-sm-4">
+      <h4>Best breweries</h4>
+      <table class="table">
+        <thead>
+          <th>Brewery</th>
+          <th>Average</th>
+        </thead>
+        <tbody>
+          <% @breweries.each do |brewery| %>
+            <tr>
+              <td><%= link_to brewery.name, brewery %></td>
+              <td><%= round(brewery.average_rating) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-sm-4">
+      <h4>Best styles</h4>
+      <table class="table">
+        <thead>
+          <th>Style</th>
+          <th>Average</th>
+        </thead>
+        <tbody>
+          <% @styles.each do |style| %>
+            <tr>
+              <td><%= link_to style.name, style %> </td>
+              <td><%= round(style.average_rating) %> </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<h4>Most active users</h4>
+<ol>
+  <% @users.each do |user| %>
+    <li><%= "#{user.username} #{pluralize(user.ratings.count, 'rating')}" %></li>
+  <% end %>
+</ol>
+
+<h4>Recent ratings</h4>
+<ul>
+  <% @recent.each do |rating| %>
+    <li><%= "#{rating.beer.name} #{rating.score} #{rating.created_at}"%></li>
+  <% end %>
+</ul>

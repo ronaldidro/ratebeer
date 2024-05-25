@@ -1,0 +1,27 @@
+<%= form_with(model: style) do |form| %>
+  <% if style.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(style.errors.count, "error") %> prohibited this style from being saved:</h2>
+
+      <ul>
+        <% style.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, class: "form-control" %>
+  </div>
+
+  <div>
+    <%= form.submit class: 'btn btn-primary' %>
+  </div>
+<% end %>

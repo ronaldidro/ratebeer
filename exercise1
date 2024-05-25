@@ -1,0 +1,80 @@
+irb(main):009> br = Brewery.new(name: "BrewDog", year: 2007)
+=> #<Brewery:0x00007f0f25359d60 id: nil, name: "BrewDog", year: 2007, created_at: nil, updated_at: ...
+irb(main):010> br.save
+  TRANSACTION (0.1ms)  begin transaction
+  Brewery Create (0.5ms)  INSERT INTO "breweries" ("name", "year", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"  [["name", "BrewDog"], ["year", 2007], ["created_at", "2024-04-21 00:43:33.232576"], ["updated_at", "2024-04-21 00:43:33.232576"]]
+  TRANSACTION (0.1ms)  commit transaction
+=> true
+irb(main):011> b = Beer.create name: "Punk IPA", style: "IPA"
+=> 
+#<Beer:0x00007f0f24e82940
+...
+irb(main):012> b.brewery = br
+=> 
+#<Brewery:0x00007f0f25359d60
+...
+irb(main):013> br
+=> 
+#<Brewery:0x00007f0f25359d60
+ id: 4,
+ name: "BrewDog",
+ year: 2007,
+ created_at: Sun, 21 Apr 2024 00:43:33.232576000 UTC +00:00,
+ updated_at: Sun, 21 Apr 2024 00:43:33.232576000 UTC +00:00>
+irb(main):014> b.save
+  TRANSACTION (0.1ms)  begin transaction
+  Beer Create (0.6ms)  INSERT INTO "beers" ("name", "style", "brewery_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"  [["name", "Punk IPA"], ["style", "IPA"], ["brewery_id", 4], ["created_at", "2024-04-21 00:46:48.161165"], ["updated_at", "2024-04-21 00:46:48.161165"]]
+  TRANSACTION (0.1ms)  commit transaction
+=> true
+irb(main):015> b = Beer.create name: "Nanny State", style: "low alcohol"
+=> 
+#<Beer:0x00007f0f24d8d710
+...
+irb(main):016> b.brewery = br
+=> 
+#<Brewery:0x00007f0f25359d60
+...
+irb(main):017> b.save
+  TRANSACTION (0.1ms)  begin transaction
+  Beer Create (0.6ms)  INSERT INTO "beers" ("name", "style", "brewery_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"  [["name", "Nanny State"], ["style", "low alcohol"], ["brewery_id", 4], ["created_at", "2024-04-21 00:48:00.938483"], ["updated_at", "2024-04-21 00:48:00.938483"]]
+  TRANSACTION (0.2ms)  commit transaction
+=> true
+irb(main):018> b.ratings create score: 15
+(irb):18:in `<main>': undefined method `create' for main (NoMethodError)
+
+b.ratings create score: 15
+          ^^^^^^
+irb(main):019> b
+=> 
+#<Beer:0x00007f0f24d8d710
+ id: 9,
+ name: "Nanny State",
+ style: "low alcohol",
+ brewery_id: 4,
+ created_at: Sun, 21 Apr 2024 00:48:00.938483000 UTC +00:00,
+ updated_at: Sun, 21 Apr 2024 00:48:00.938483000 UTC +00:00>
+irb(main):020> b.ratings
+  Rating Load (0.2ms)  SELECT "ratings".* FROM "ratings" WHERE "ratings"."beer_id" = ? /* loading for pp */ LIMIT ?  [["beer_id", 9], ["LIMIT", 11]]
+=> []
+irb(main):021> b.ratings.create score: 15
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (0.5ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"  [["score", 15], ["beer_id", 9], ["created_at", "2024-04-21 00:49:35.154033"], ["updated_at", "2024-04-21 00:49:35.154033"]]
+  TRANSACTION (0.2ms)  commit transaction
+=> 
+#<Rating:0x00007f0f24d58858
+ id: 4,
+ score: 15,
+ beer_id: 9,
+ created_at: Sun, 21 Apr 2024 00:49:35.154033000 UTC +00:00,
+ updated_at: Sun, 21 Apr 2024 00:49:35.154033000 UTC +00:00>
+irb(main):022> b.ratings.create score: 13
+  TRANSACTION (0.1ms)  begin transaction
+  Rating Create (0.6ms)  INSERT INTO "ratings" ("score", "beer_id", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"  [["score", 13], ["beer_id", 9], ["created_at", "2024-04-21 00:49:44.366031"], ["updated_at", "2024-04-21 00:49:44.366031"]]
+  TRANSACTION (0.2ms)  commit transaction
+=> 
+#<Rating:0x00007f0f24decbc0
+ id: 5,
+ score: 13,
+ beer_id: 9,
+ created_at: Sun, 21 Apr 2024 00:49:44.366031000 UTC +00:00,
+ updated_at: Sun, 21 Apr 2024 00:49:44.366031000 UTC +00:00>

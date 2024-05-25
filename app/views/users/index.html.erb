@@ -1,0 +1,14 @@
+<h1>Users</h1>
+
+<div id="users" class="list-group list-group-flush">
+  <% @users.each do |user| %>
+    <div class="list-group-item">
+      <%= link_to user.username, user %>
+      <% if current_user&.admin && !user.active %>
+        <span class="badge rounded-pill text-bg-primary">closed</span>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<%= link_to "New user", new_user_path, class: 'btn btn-primary' %>
