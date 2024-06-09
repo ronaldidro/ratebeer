@@ -8,3 +8,4 @@ pin "bootstrap", to: "bootstrap.min.js"
 pin "@popperjs/core", to: "popper.js"
 
 pin_all_from "app/javascript/controllers", under: "controllers"
+pin_all_from "app/javascript/custom", under: "custom"

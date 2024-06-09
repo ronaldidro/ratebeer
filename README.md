@@ -1,24 +1,47 @@
-# README
+# RATEBEER
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Prerequisites
 
-Things you may want to cover:
+```
+ruby 3.1.2
+rails 7.0.8.3
+```
 
-* Ruby version
+### Installation
 
-* System dependencies
+- Get a [bm_key](https://beermapping.com/api/reference)
+- Get a [ws_key](https://weatherstack.com/documentation)
 
-* Configuration
+- Install gems
+```
+gem install bundler
+bundle install
+```
 
-* Database creation
+- Init DB
+```
+rails db:migrate
+```
 
-* Database initialization
+- Init server
+```
+BEERMAPPING_APIKEY="bm_key" WEATHERSTACK_APIKEY="ws_key" rails s
+```
 
-* How to run the test suite
+### Run test
 
-* Services (job queues, cache servers, search engines, etc.)
+```
+rspec -fd spec
+```
 
-* Deployment instructions
+### Run linter
 
-* ...
+```
+rubocop
+```
+
+### Deploy to [Fly](https://fly.io/)
+
+```
+fly deploy
+```

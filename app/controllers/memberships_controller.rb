@@ -7,6 +7,7 @@ class MembershipsController < ApplicationController
   def create
     @membership = Membership.new params.require(:membership).permit(:beerclub_id)
     @membership.user = current_user
+    @membership.confirmed = false
 
     if @membership.save
       redirect_to beerclub_url(@membership.beerclub), notice: "#{current_user.username} welcome to the club."
@@ -20,6 +21,12 @@ class MembershipsController < ApplicationController
     membership = Membership.find(params[:id])
     membership.delete
     redirect_to current_user, notice: "Membership in #{membership.beerclub.name} ended."
+  end
+
+  def confirm
+    membership = Membership.find(params[:id])
+    membership.update confirmed: true
+    redirect_to beerclub_url(membership.beerclub), notice: "#{membership.user.username} confirmed to the club."
   end
 
   private

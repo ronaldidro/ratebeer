@@ -1,10 +1,14 @@
 class RatingsController < ApplicationController
+  before_action :expire_brewery_cache, only: [:create]
+
   def index
-    @recent = Rating.recent
-    @breweries = Brewery.top(3)
-    @beers = Beer.top(3)
-    @styles = Style.top(3)
-    @users = User.top(3)
+    object = Rails.cache.read('rating_stats') || {}
+    @recent = object[:recent]       || Rating.recent
+    @breweries = object[:breweries] || Brewery.top(3)
+    @beers = object[:beers]         || Beer.top(3)
+    @styles = object[:styles]       || Style.top(3)
+    @users = object[:users]         || User.top(3)
+    @ratings = object[:ratings]     || Rating.all
   end
 
   def new

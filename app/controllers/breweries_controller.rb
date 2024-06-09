@@ -1,14 +1,17 @@
 class BreweriesController < ApplicationController
   before_action :set_brewery, only: %i[show edit update destroy]
   # before_action :authenticate, only: [:destroy]
-  before_action :ensure_that_signed_in, except: [:index, :show]
-  before_action :admin_verification, only: [:destroy]
+  before_action :ensure_that_signed_in, except: [:index, :show, :list]
+  before_action :ensure_that_admin, only: [:destroy]
+  before_action :expire_brewery_cache, only: [:create, :update, :destroy, :toggle_activity]
 
   # GET /breweries or /breweries.json
   def index
+    return if request.format.html? && fragment_exist?("brewerylist")
+
     @active_breweries = Brewery.active
     @retired_breweries = Brewery.retired
-    # render :breweries
+    @breweries = @active_breweries + @retired_breweries
   end
 
   # GET /breweries/1 or /breweries/1.json
@@ -71,6 +74,9 @@ class BreweriesController < ApplicationController
     redirect_to brewery, notice: "brewery activity status changed to #{new_status}"
   end
 
+  def list
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -83,17 +89,13 @@ class BreweriesController < ApplicationController
     params.require(:brewery).permit(:name, :year, :active)
   end
 
-  def authenticate
-    admin_accounts = { "pekka" => "beer", "arto" => "foobar", "matti" => "ittam", "vilma" => "kangas" }
+  # def authenticate
+  #   admin_accounts = { "pekka" => "beer", "arto" => "foobar", "matti" => "ittam", "vilma" => "kangas" }
 
-    authenticate_or_request_with_http_basic do |username, password|
-      raise "Wrong username or password" unless password == admin_accounts[username]
+  #   authenticate_or_request_with_http_basic do |username, password|
+  #     raise "Wrong username or password" unless password == admin_accounts[username]
 
-      return true
-    end
-  end
-
-  def admin_verification
-    redirect_to breweries_path, notice: 'only admin can do this' unless current_user.admin
-  end
+  #     return true
+  #   end
+  # end
 end

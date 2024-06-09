@@ -1,13 +1,17 @@
 class User < ApplicationRecord
   include RatingAverage
+  extend TopRated
 
   has_secure_password
 
   has_many :ratings, dependent: :destroy
   has_many :beers, through: :ratings
 
-  has_many :memberships, dependent: :destroy
+  has_many :memberships, -> { where confirmed: true }, dependent: :destroy
+  has_many :applications, -> { where confirmed: false }, class_name: "Membership"
+
   has_many :beerclubs, through: :memberships
+  has_many :applied_clubs, through: :applications, source: :beerclub
 
   validates :username, uniqueness: true, length: { in: 3..30 }
   validates :password, length: { minimum: 4 }, format: { with: /\A[A-Z].*\d|\d.*[A-Z]\z/, message: "must include one upper case letter and number" }
@@ -39,10 +43,5 @@ class User < ApplicationRecord
 
   def average_of(ratings)
     ratings.sum(&:score).to_f / ratings.count
-  end
-
-  def self.top(amount)
-    sorted_by_rating_in_desc_order = User.all.sort_by{ |u| -u.ratings.count }
-    sorted_by_rating_in_desc_order[0, amount]
   end
 end

@@ -1,12 +1,24 @@
 class BeersController < ApplicationController
   before_action :set_beer, only: %i[show edit update destroy]
   before_action :set_breweries_and_styles_for_template, only: [:new, :edit]
-  before_action :ensure_that_signed_in, except: [:index, :show]
-  before_action :admin_verification, only: [:destroy]
+  before_action :ensure_that_signed_in, except: [:index, :show, :list]
+  before_action :ensure_that_admin, only: [:destroy]
+  before_action :expire_beer_cache, only: [:create, :update, :destroy]
+  before_action :expire_brewery_cache, only: [:create, :destroy]
 
   # GET /beers or /beers.json
   def index
-    @beers = Beer.all
+    @order = params[:order] || 'name'
+    # if fragment exist, stop the method here (i.e. render the view immediately)
+    return if request.format.html? && fragment_exist?("beerlist-#{@order}")
+
+    @beers = Beer.includes(:brewery, :style, :ratings).all
+    @beers =  case @order
+              when "name" then @beers.sort_by(&:name)
+              when "brewery" then @beers.sort_by { |b| b.brewery.name }
+              when "style" then @beers.sort_by { |b| b.style.name }
+              when "rating" then @beers.sort_by(&:average_rating).reverse
+              end
   end
 
   # GET /beers/1 or /beers/1.json
@@ -63,6 +75,9 @@ class BeersController < ApplicationController
     end
   end
 
+  def list
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -80,7 +95,7 @@ class BeersController < ApplicationController
     @styles = Style.all
   end
 
-  def admin_verification
-    redirect_to beers_path, notice: 'only admin can do this' unless current_user.admin
+  def expire_beer_cache
+    %w(beerlist-name beerlist-brewery beerlist-style).each{ |f| expire_fragment(f) }
   end
 end

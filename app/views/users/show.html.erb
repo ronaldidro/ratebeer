@@ -37,6 +37,17 @@
   </ul>
 <% end %>
 
+<% unless @user.applied_clubs.empty? %>
+  <h3>applied membership of</h3>
+  <ul>
+    <% @user == current_user && @user.applied_clubs.each do |beerclub| %>
+      <li>
+        <%= link_to beerclub.name, beerclub %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
 <div>
   <%= link_to (@user.active ? "Change account status" : "Open account"), change_status_user_path(@user.id), data: { turbo_method: "post" }, class: "btn btn-danger" if current_user&.admin %>
   <% if @user == current_user %>

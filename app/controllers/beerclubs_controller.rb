@@ -1,11 +1,12 @@
 class BeerclubsController < ApplicationController
   before_action :set_beerclub, only: %i[show edit update destroy]
   before_action :ensure_that_signed_in, except: [:index, :show]
-  before_action :admin_verification, only: [:destroy]
+  before_action :ensure_that_admin, only: [:destroy]
 
   # GET /beerclubs or /beerclubs.json
   def index
-    @beerclubs = Beerclub.all
+    order = params[:order] || 'name'
+    @beerclubs = Beerclub.order(order.to_sym)
   end
 
   # GET /beerclubs/1 or /beerclubs/1.json
@@ -33,11 +34,15 @@ class BeerclubsController < ApplicationController
 
     respond_to do |format|
       if @beerclub.save
-        format.html { redirect_to beerclub_url(@beerclub), notice: "Beerclub was successfully created." }
-        format.json { render :show, status: :created, location: @beerclub }
+        membership = Membership.new confirmed: true, user: current_user, beerclub: @beerclub
+
+        if membership.save
+          format.html { redirect_to beerclub_url(@beerclub), notice: "Beerclub and membership was successfully created." }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @beerclub.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -75,9 +80,5 @@ class BeerclubsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def beerclub_params
     params.require(:beerclub).permit(:name, :founded, :city)
-  end
-
-  def admin_verification
-    redirect_to beerclubs_path, notice: 'only admin can do this' unless current_user.admin
   end
 end

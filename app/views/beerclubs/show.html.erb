@@ -8,18 +8,36 @@
   <% end %>
 </ul>
 
+<% if @beerclub.members.include?(current_user) %>
+  <h4>membership applications</h4>
+  <ul>
+    <% @beerclub.applications.each do |application| %>
+      <li>
+        <%= link_to application.user.username, user_path(application.user) %>
+        <%= link_to "Confirm", confirm_membership_path(application.id), data: { turbo_method: "post" }, class: "btn btn-primary" %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
 <% if current_user %>
-  <% if current_user.beerclubs.exclude?(@beerclub) %>  
+  <% if @beerclub.applicants.exclude?(current_user) %>  
     <%= form_with(model: @membership) do |form| %>
       <%= form.hidden_field :beerclub_id, value: @beerclub.id %>
       <%= form.hidden_field :user_id, value: current_user.id %>
       <%= form.submit "Join the beer club", class: 'btn btn-primary' %>
     <% end %>
-  <% else %>
+  <% elsif @beerclub.members.include?(current_user) %>
     <%= form_with(model: @membership, method: :delete) do |form| %>
       <%= form.submit "End the membership", class: 'btn btn-primary' %>
     <% end %>
-  <% end %> 
+  <% end %>
 
-  <%= edit_and_destroy_buttons(@beerclub) %>
+  <% if @beerclub.applicants.include?(current_user) %>
+    <em>Application pending!</em>
+  <% end %>
+  
+  <% if @beerclub.members.include?(current_user) %>
+    <%= edit_and_destroy_buttons(@beerclub) %>
+  <% end %> 
 <% end %>

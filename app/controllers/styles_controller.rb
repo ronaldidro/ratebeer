@@ -1,6 +1,6 @@
 class StylesController < ApplicationController
   before_action :set_style, only: %i[show edit update destroy]
-  before_action :admin_verification, only: [:destroy]
+  before_action :ensure_that_admin, only: [:destroy]
 
   # GET /styles or /styles.json
   def index
@@ -68,9 +68,5 @@ class StylesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def style_params
     params.require(:style).permit(:name, :description)
-  end
-
-  def admin_verification
-    redirect_to styles_path, notice: 'only admin can do this' unless current_user.admin
   end
 end
