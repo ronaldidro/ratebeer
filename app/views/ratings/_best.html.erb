@@ -1,0 +1,16 @@
+<%= turbo_frame_tag tag_name do %>
+  <table class="table">
+    <thead>
+      <th><%= record_name %></th>
+      <th>Average</th>
+    </thead>
+    <tbody>
+      <% records.each do |record| %>
+        <tr>
+          <td><%= link_to record.name, record, data: { turbo_frame: "_top"} %></td>
+          <td><%= round(record.average_rating) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -1,11 +1,14 @@
 <h1>Styles</h1>
 
 <div id="styles">
-  <div class="list-group">
+  <%= turbo_frame_tag "styles" do %>
     <% @styles.each do |style| %>
-      <%= link_to style.name, style, class: 'list-group-item list-group-item-action' %>
+      <%= link_to style.name, style, data: { turbo_frame: "style_details" } %>
     <% end %>
-  </div>
+  <% end %>
+
+  <%= turbo_frame_tag "style_details" do %>
+  <% end %>
 </div>
 
 <%= link_to "New style", new_style_path, class: 'btn btn-primary' %>

@@ -1,4 +1,4 @@
-<%= form_with(model: brewery) do |form| %>
+<%= form_with(model: brewery, data: { turbo: false }) do |form| %>
   <% if brewery.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(brewery.errors.count, "error") %> prohibited this brewery from being saved:</h2>

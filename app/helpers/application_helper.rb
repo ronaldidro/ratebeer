@@ -3,7 +3,10 @@ module ApplicationHelper
     return unless current_user&.admin?
 
     edit = link_to('Edit', url_for([:edit, item]), class: "btn btn-primary")
-    del = button_to('Destroy', item, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure ?" } })
+    del = button_to('Destroy', item, method: :delete,
+                                     class: "btn btn-danger",
+                                     form: { data: { turbo: "false" } },
+                                     onclick: "return confirm('Are you sure?');")
 
     raw("#{edit} #{del}")
   end

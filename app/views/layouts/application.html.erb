@@ -39,7 +39,19 @@
             <li class="nav-item">
               <%= link_to 'styles', styles_path , { class: "nav-link" } %>
             </li>
+            <li class="nav-item">
+              <%= link_to 'tax calculator', calculator_path, { class: "nav-link" } %>
+            </li>            
             <% if current_user %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Hotwire
+                </a>
+                <ul class="dropdown-menu">
+                  <li><%= link_to 'Breweries', hotwire_breweries_path, { class: "dropdown-item" } %></li>
+                  <li><%= link_to 'Me', hotwire_user_path(current_user), { class: "dropdown-item" } %></li>
+                </ul>
+              </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <span class="navbar-toggler-icon"></span>
@@ -53,6 +65,9 @@
                   </li>
                   <li>
                     <%= link_to "Join a club", new_membership_path , { class:"dropdown-item"  } %>
+                  </li>
+                  <li>
+                    <%= link_to "Chat", messages_path , { class:"dropdown-item"  } %>
                   </li>
                   <li>
                     <%= link_to "Sign out", signout_path, class: "dropdown-item", data: { turbo_method: :delete } %>

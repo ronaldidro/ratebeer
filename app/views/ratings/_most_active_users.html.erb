@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "most_active_users" do %>
+  <ol>
+    <% users.each do |user| %>
+      <li><%= "#{user.username} #{pluralize(user.ratings.count, 'rating')}" %></li>
+    <% end %>
+  </ol>
+<% end %>

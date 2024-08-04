@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update destroy]
+  before_action :set_user, only: %i[show edit update destroy hotwire]
   before_action :ensure_that_admin, only: [:change_status]
 
   # GET /users or /users.json
@@ -67,6 +67,18 @@ class UsersController < ApplicationController
     new_status = user.active? ? "active" : "closed"
 
     redirect_to user, notice: "user account status changed to #{new_status}"
+  end
+
+  def hotwire
+  end
+
+  def recommendation
+    # simulate a delay in calculating the recommendation
+    sleep(2)
+    ids = Beer.pluck(:id)
+    # our recommendation us just a randomly picked beer...
+    random_beer = Beer.find(ids.sample)
+    render partial: 'recommendation', locals: { beer: random_beer }
   end
 
   private

@@ -16,4 +16,20 @@ class Brewery < ApplicationRecord
   def year_not_greater_than_this_year
     errors.add(:year, "can't be greater than current year") if year.present? && year > Date.today.year
   end
+
+  after_create_commit do
+    status = active? ? "active" : "retired"
+    count = active? ? self.class.active.count : self.class.retired.count
+
+    broadcast_append_to "breweries_index", partial: "breweries/brewery_row", target: "#{status}_brewery_rows"
+    broadcast_replace_to "breweries_index", partial: "breweries/brewery_count", target: "#{status}_brewery_count", locals: { status:, count: }
+  end
+
+  after_destroy_commit do
+    status = active? ? "active" : "retired"
+    count = active? ? self.class.active.count : self.class.retired.count
+
+    broadcast_remove_to "breweries_index", target: self
+    broadcast_replace_to "breweries_index", partial: "breweries/brewery_count", target: "#{status}_brewery_count", locals: { status:, count: }
+  end
 end

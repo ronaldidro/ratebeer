@@ -1,0 +1,15 @@
+<%= turbo_frame_tag "recent" do %>
+  <%= link_to "↑", ratings_path(page: 1, order: 'asc') if @order == 'desc' %>
+  <%= link_to "↓", ratings_path(page: 1, order: 'desc') if @order == 'asc' %>
+  <% unless @page == 1 %>
+    <%= link_to "<<< Previous page", ratings_path(page: @page - 1, order: @order) %>
+  <% end %>
+  <% unless @page == @last_page %>
+    <%= link_to "Next page >>>", ratings_path(page: @page + 1, order: @order) %>
+  <% end %>
+  <ul>
+    <% ratings.each do |rating| %>
+      <li><%= "#{rating.beer.name} #{rating.score} #{rating.created_at}"%></li>
+    <% end %>
+  </ul>
+<% end %>

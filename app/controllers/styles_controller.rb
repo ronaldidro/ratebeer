@@ -9,6 +9,11 @@ class StylesController < ApplicationController
 
   # GET /styles/1 or /styles/1.json
   def show
+    if turbo_frame_request?
+      render partial: 'details', locals: { style: @style }
+    else
+      render :show
+    end
   end
 
   # GET /styles/new
